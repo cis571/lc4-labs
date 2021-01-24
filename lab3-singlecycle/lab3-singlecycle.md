@@ -50,11 +50,9 @@ TEST_CASE=test_mem make test
 ```
 
 
-## Demo
+## Verify timing closure
 
-### Verify timing closure
-
-You should first verify that your design has reached *timing closure*, which means that the logic you've designed can be run correctly at the clock speed you specify. The clock speed for Lab 3 is currently set at 15.625MHz, which is sufficient for our solution but YMMV.
+You should verify that your design has reached *timing closure*, which means that the logic you've designed can be run correctly at the clock speed you specify. The clock speed for Lab 3 is currently set at 15.625MHz, which is sufficient for our solution but YMMV.
 
 To verify timing closure, run `make impl`. Then, examine the `output/post_route_timing_summary_report.txt` file that is generated as part of the implementation proces. Look for the section of the report that discusses the timing for the processor's clock, which is unhelpfully named `clk_processor_design_1_clk_wiz_0_0`. This part of the report looks like this:
 ```
@@ -109,7 +107,7 @@ Re-run `make impl` and see if you achieve timing closure with the slower clock. 
 
 Your timing results (and metrics for area and power) are automatically included in the .zip file you submit via Canvas. We'll use this to look at resource consumption across all the designs in the class.
 
-### Run demo
+## (Not for Spring 2021) Demo
 
 For the demo, you will write a simple LC4 assembly program that displays a string to the ZedBoard's VGA display. Most of the code has been written for you, but you need to come up with a string you want to display and call appropriate library functions to send the string to the display. In the file `lab3-demo.asm`, you should write assembly code at `PROGRAM_START` to write your desired string. You will find the code in `DRAW_CHAR` function especially helpful, as it takes an ASCII character, translates it into a pixel bitmap, and sends it to the VGA display at the desired x,y coordinates.
 
