@@ -1,4 +1,4 @@
-This is the repository for the labs in [CIS 501: Computer Architecture](http://cis.upenn.edu/~cis501/current/).
+This is the repository for the labs in [CIS 571: Computer Organization & Design](http://cis.upenn.edu/~cis571/).
 
 # Running the testbench on your local machine
 
