@@ -43,7 +43,7 @@ compares your result to the expected result, and prints a detailed
 error message if the two differ. The error message prints instructions
 in assembly format for easier cross-referencing with the [LC4 ISA documentation](http://cis.upenn.edu/~cis371/current/lc4.html).
 
-## ZedBoard demo
+## (Not for Spring 2021) ZedBoard demo
 
 This demo allows you to run a series of test inputs through your
 ALU. The inputs, and your ALU's output, are shown on the ZedBoard's
