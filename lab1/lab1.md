@@ -66,7 +66,7 @@ lives) and run the command `make check`. This will run the [yosys Verilog analys
 Some warnings you will encounter in Lab 1 (and beyond):
 * _multiple conflicting drivers_: two input wires are wired together, resulting in an undefined value
 * _Wire XYZ is used but has no driver_: some wire is not connected to any module's output, so it has an undefined value
-* _found logic loop in module_: a "short circuit" exists in the design where a module's output connects to its input without any sequential element in between, creating undefined values. Note that these loops are often detected at the module _declaration_, when the problem actually lies with just one of the module's _instantiations_.
+* _found logic loop in module_: a "short circuit" exists in the design where a module's output connects to its input without any sequential element in between, creating undefined values. Note that these loops are often detected at the module _declaration_, when the problem actually lies with one of the module's _instantiations_. Still, knowing the module involved is a useful clue for debugging.
 * _Resizing cell port ..._: the size of some wire vector does not match the width of the input/output port it's connected to
 
 As you resolve these warnings, re-run `make check` to see what code analysis finds. Sometimes one bug can mask another!
