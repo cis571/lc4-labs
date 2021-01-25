@@ -143,7 +143,11 @@ See the PS7 discussion under _Benign Warnings_ above.
 **NSTD-1#1 Critical Warning
 Unspecified I/O Standard
 ```
-This can appear when you run `make synth` but should disappear when you run `make impl`. It arises because, during synthesis, Vivado seems to ignore information about the physical ZedBoard specifications, and then it gives this warning complaining that it doesn't have information about the electrical characteristics of the various I/O pins in the design. In `make impl`, Vivado does take the physical specs into account which avoids this warning.
+```
+UCIO-1#1 Critical Warning
+Unconstrained Logical Port
+```
+These critical warnings can appear when you run `make synth` but should disappear when you run `make impl`. They arise because, during synthesis, Vivado seems to ignore information about the physical ZedBoard specifications, and then it gives this warning complaining that it doesn't have information about the electrical characteristics of the various I/O pins in the design. In `make impl`, Vivado does take the physical specs into account which avoids these warnings.
 
 There are other interesting reports in the `output/` directory. We'll dig into
 these more in future labs, but here's a quick summary:
