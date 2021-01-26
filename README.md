@@ -95,4 +95,4 @@ The "first-stage boot loader" for the ZedBoard. This executable will program the
 `common/tcl/program.tcl` Tcl script for Vivado batch mode to program an FPGA attached to the local computer.
 
 #### common/xdc/zedboard_master.xdc
-The master list of the physical pins on the ZedBoard, along with their functionalities and required voltages. Used as a reference to create constraint files for each lab.
+The master list of the physical pins on the ZedBoard, along with their functionalities and required voltages. Used as a reference to create constraint files for each lab. 
