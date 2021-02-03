@@ -9,10 +9,7 @@ Note that this is an **individual lab**, so you should complete it on your own.
 
 ## Clone github repo
 
-First, clone this repo by running, on one of the biglab machines, the command:
-```
-git clone https://github.com/cis571/lc4-labs.git
-```
+Clone your repo by following [our recommended git setup instructions](https://www.cis.upenn.edu/~cis571/current/git-setup.html).
 
 ## Run the tests
 
