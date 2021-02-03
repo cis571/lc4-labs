@@ -28,7 +28,7 @@ module test_divider;
 `include "print_points.v"
 
    // status variables (number of errors and total number of tests)
-   integer     input_file, errors, allTests, divTests;
+   integer     input_file, errors, allTests, divTests, __ignore;
 
    // input variables (registers so we can generate them here)
    reg [15:0] i_dividend;
@@ -126,7 +126,7 @@ module test_divider;
       end
       
       // loop 2000 times, with a one-indexed number for each test
-      for (divTests = 0; divTests < 4000;) begin
+      for (divTests = 0; divTests < 4000; __ignore = __ignore + 1) begin
 
          // set random dividend and divisor
          i_dividend = $random;
