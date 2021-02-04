@@ -155,8 +155,7 @@ these more in future labs, but here's a quick summary:
 ## Revisiting the Tests
 
 Even after you resolve all the warnings, it is likely that some of the tests
-will still fail, because it is possible to have bugs that are pure logic
-errors. If we're supposed to add two numbers but we subtract instead, Vivado
+will still fail. If we're supposed to add two numbers but we subtract instead, Vivado
 will never be able to figure this out: we can have a perfectly well-formed
 circuit that just doesn't do what it's supposed to do.
 
@@ -165,6 +164,13 @@ case (a single input to a particular module) and examine it. It may be helpful
 to write your own, smaller testbench (or comment out parts of `rca_testbench.v`)
 so that you can run just the input of interest. Start by debugging the lowest-level
 module, since those bugs may be the root cause of failures in other higher-level modules.
+
+There is some code at the top of the `rca_testbench.v` testbench file for adjusting the testbench behavior:
+```
+`define EXIT_AFTER_FIRST_ERROR 0
+`define MAX_ERRORS_TO_DISPLAY ...
+```
+You can edit these to change whether the testbench exits after the first failure, and how many errors are printed out. Often, the first error is the most important one since errors tend to "compound". For example, this lab's testbench tests the lowest-level modules first. An error in a lower-level module _M_ will almost certainly contribute to errors in higher-level modules that use _M_. In later labs, an error can corrupt a state element like a register, causing many subsequent errors. So pay special attention to the first error :-).
 
 ## Submitting Code
 
