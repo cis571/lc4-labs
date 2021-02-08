@@ -21,6 +21,8 @@
 // change this to adjust how many errors are printed out
 `define MAX_ERRORS_TO_DISPLAY 15
 
+// set this to 1 to create a waveform file for easier debugging
+`define GENERATE_VCD 0
 
 `define EOF 32'hFFFF_FFFF
 `define NEWLINE 10
@@ -69,8 +71,8 @@ module test_divider;
    initial begin // start testbench block
 
 `ifdef GENERATE_VCD
-      $dumpfile(`VCD_FILE); 
-      $dumpvars(0,div,divider_iter);
+      $dumpfile("divider.vcd"); 
+      $dumpvars;
 `endif
       
       // initialize inputs
