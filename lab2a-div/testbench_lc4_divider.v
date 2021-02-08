@@ -37,7 +37,7 @@ module test_divider;
 `include "print_points.v"
 
    // status variables (number of errors and total number of tests)
-   integer     input_file, errors, allTests, divTests, __ignore;
+   integer     input_file, errors, allTests, divTests, __ignore, randomSeed;
 
    // input variables (registers so we can generate them here)
    reg [15:0] i_dividend;
@@ -71,9 +71,17 @@ module test_divider;
    initial begin // start testbench block
 
 `ifdef GENERATE_VCD
-      $dumpfile("divider.vcd"); 
+      $dumpfile("divider.vcd");
       $dumpvars;
 `endif
+      
+      // set random seed for deterministic testing
+   `ifdef __ICARUS__
+      randomSeed = 42;
+      randomSeed = $random(randomSeed);
+   `else
+      $srandom(42); 
+   `endif
       
       // initialize inputs
       i_dividend = 0;
@@ -221,3 +229,4 @@ module test_divider;
    end
 
 endmodule
+
