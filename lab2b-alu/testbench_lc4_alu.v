@@ -6,6 +6,9 @@
 // change this to adjust how many errors are printed out
 `define MAX_ERRORS_TO_DISPLAY 15
 
+// set this to 1 to create a waveform file for easier debugging
+`define GENERATE_VCD 1
+
 `define NULL 0
 
 module test_alu;
@@ -42,14 +45,14 @@ module test_alu;
       // initialize inputs
 
 `ifdef GENERATE_VCD
-      $dumpfile(`VCD_FILE); 
-      $dumpvars(0,gp,cla,alu);
+      $dumpfile("alu.vcd");
+      $dumpvars;
 `endif
       
       // set random seed for deterministic testing
    `ifdef __ICARUS__
       randomSeed = 42;
-      $random(randomSeed);
+      randomSeed = $random(randomSeed);
    `else
       $srandom(42); 
    `endif
