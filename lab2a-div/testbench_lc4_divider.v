@@ -70,10 +70,10 @@ module test_divider;
 
    initial begin // start testbench block
 
-`ifdef GENERATE_VCD
-      $dumpfile("divider.vcd");
-      $dumpvars;
-`endif
+      if (`GENERATE_VCD) begin
+         $dumpfile("divider.vcd");
+         $dumpvars;
+      end
       
       // set random seed for deterministic testing
    `ifdef __ICARUS__

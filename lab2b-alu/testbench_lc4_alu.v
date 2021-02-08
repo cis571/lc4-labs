@@ -44,10 +44,10 @@ module test_alu;
    initial begin
       // initialize inputs
 
-`ifdef GENERATE_VCD
-      $dumpfile("alu.vcd");
-      $dumpvars;
-`endif
+      if (`GENERATE_VCD) begin
+         $dumpfile("alu.vcd");
+         $dumpvars;
+      end
       
       // set random seed for deterministic testing
    `ifdef __ICARUS__
