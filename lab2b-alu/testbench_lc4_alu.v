@@ -1,5 +1,14 @@
 `timescale 1ns / 1ps
 
+// set this to 1 to exit after the first failure
+`define EXIT_AFTER_FIRST_ERROR 0
+
+// change this to adjust how many errors are printed out
+`define MAX_ERRORS_TO_DISPLAY 15
+
+// set this to 1 to create a waveform file for easier debugging
+`define GENERATE_VCD 0
+
 `define NULL 0
 
 module test_alu;
@@ -10,7 +19,7 @@ module test_alu;
    `include "print_points.v"
 
    // debugging state variables
-   integer  aluInFile, gpInFile, outputFile, errors, tests, lineno, claTests;
+   integer  aluInFile, gpInFile, outputFile, errors, tests, lineno, claTests, randomSeed;
 
    // inputs
    reg [3:0]   gin, pin;
@@ -33,8 +42,20 @@ module test_alu;
    lc4_alu alu (.i_insn(insn), .i_pc(pc), .i_r1data(r1data), .i_r2data(r2data), .o_result(actualALUResult));
    
    initial begin
-      // initialize Inputs
-      $srandom(42); // set random seed for deterministic testing
+      // initialize inputs
+
+      if (`GENERATE_VCD) begin
+         $dumpfile("alu.vcd");
+         $dumpvars;
+      end
+      
+      // set random seed for deterministic testing
+   `ifdef __ICARUS__
+      randomSeed = 42;
+      randomSeed = $random(randomSeed);
+   `else
+      $srandom(42); 
+   `endif
       lineno = 0;
       errors = 0;
       tests = 0;
@@ -76,12 +97,17 @@ module test_alu;
          
          if (actualGout !== expectedGout || actualPout != expectedPout || actualCout !== expectedCout) begin
             errors = errors+1;
-            $write("[gp] error at line %04d: ",    lineno);
-            $write("gin:%b pin:%b cin:%b ", gin, pin, cin);
-            $write("produced gout:%b pout:%b cout:%b ", actualGout, actualPout, actualCout);
-            $write("instead of gout:%b pout:%b cout:%b", expectedGout, expectedPout, expectedCout);
-            $display("");
-            //$finish; // NB: uncomment this to terminate after the first error
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $write("[gp] error at line %04d: ",    lineno);
+               $write("gin:%b pin:%b cin:%b ", gin, pin, cin);
+               $write("produced gout:%b pout:%b cout:%b ", actualGout, actualPout, actualCout);
+               $write("instead of gout:%b pout:%b cout:%b", expectedGout, expectedPout, expectedCout);
+               $display("");
+            end
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
+            end
          end
       end
 
@@ -98,9 +124,14 @@ module test_alu;
          tests = tests+1;
          #2;
          if (expectedSum !== actualSum) begin
-            $display("[cla] error a:%d + b:%d + cin:%d = sum:%d instead of %d", ain, bin, cin, actualSum, expectedSum);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[cla] error a:%d + b:%d + cin:%d = sum:%d instead of %d", ain, bin, cin, actualSum, expectedSum);
+            end
             errors = errors+1;
-            //$finish; // NB: uncomment this to terminate after the first error
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
+            end
          end
       end
 
@@ -127,17 +158,21 @@ module test_alu;
             errors = errors + 1;
 
             // break up all binary values into groups of four bits for readability
-            $write("[alu] error at line %04d: ",    lineno);
-            $write("insn = %b %b %b %b, ",    insn[15:12],       insn[11:8],       insn[7:4],       insn[3:0]);
-            $write("pc = %b %b %b %b, ",      pc[15:12],         pc[11:8],         pc[7:4],         pc[3:0]);
-            $write("r1data = %b %b %b %b, ",  r1data[15:12],     r1data[11:8],     r1data[7:4],     r1data[3:0]);
-            $write("r2data = %b %b %b %b, ",  r2data[15:12],     r2data[11:8],     r2data[7:4],     r2data[3:0]);
-            $write("result = %b %b %b %b ",   actualALUResult[15:12],     actualALUResult[11:8],     actualALUResult[7:4],     actualALUResult[3:0]);
-            $write("instead of %b %b %b %b ", expectedALUResult[15:12], expectedALUResult[11:8], expectedALUResult[7:4], expectedALUResult[3:0]);
-            
-            pinstr(insn); // pretty-print the instruction
-            $display("");
-            //$finish; // NB: uncomment this to terminate after the first error
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $write("[alu] error at line %04d: ",    lineno);
+               $write("insn = %b %b %b %b, ",    insn[15:12],       insn[11:8],       insn[7:4],       insn[3:0]);
+               $write("pc = %b %b %b %b, ",      pc[15:12],         pc[11:8],         pc[7:4],         pc[3:0]);
+               $write("r1data = %b %b %b %b, ",  r1data[15:12],     r1data[11:8],     r1data[7:4],     r1data[3:0]);
+               $write("r2data = %b %b %b %b, ",  r2data[15:12],     r2data[11:8],     r2data[7:4],     r2data[3:0]);
+               $write("result = %b %b %b %b ",   actualALUResult[15:12],     actualALUResult[11:8],     actualALUResult[7:4],     actualALUResult[3:0]);
+               $write("instead of %b %b %b %b ", expectedALUResult[15:12], expectedALUResult[11:8], expectedALUResult[7:4], expectedALUResult[3:0]); 
+               pinstr(insn); // pretty-print the instruction
+               $display("");
+            end
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
+            end
          end
          
          #2;
@@ -147,6 +182,9 @@ module test_alu;
       if (gpInFile)  $fclose(gpInFile);
       if (aluInFile)  $fclose(aluInFile);
       if (outputFile) $fclose(outputFile);
+      if (errors > `MAX_ERRORS_TO_DISPLAY) begin
+         $display("Additional %d errors NOT printed.", errors - `MAX_ERRORS_TO_DISPLAY);
+      end
       $display("Simulation finished: %d test cases %d errors", tests, errors);
       printPoints(tests, tests - errors);
       $finish;

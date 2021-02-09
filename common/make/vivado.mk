@@ -77,7 +77,7 @@ else
 iv-test: $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 	@which iverilog || (echo "ERROR: can't find iverilog executable" && exit 1)
-	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -DGENERATE_VCD=1 -o a.out $^
+	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
 
 

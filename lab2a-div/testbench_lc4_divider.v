@@ -15,6 +15,15 @@
 
 `timescale 1ns / 1ps
 
+// set this to 1 to exit after the first failure
+`define EXIT_AFTER_FIRST_ERROR 0
+
+// change this to adjust how many errors are printed out
+`define MAX_ERRORS_TO_DISPLAY 15
+
+// set this to 1 to create a waveform file for easier debugging
+`define GENERATE_VCD 0
+
 `define EOF 32'hFFFF_FFFF
 `define NEWLINE 10
 `define NULL 0
@@ -28,7 +37,7 @@ module test_divider;
 `include "print_points.v"
 
    // status variables (number of errors and total number of tests)
-   integer     input_file, errors, allTests, divTests, __ignore;
+   integer     input_file, errors, allTests, divTests, __ignore, randomSeed;
 
    // input variables (registers so we can generate them here)
    reg [15:0] i_dividend;
@@ -61,6 +70,19 @@ module test_divider;
 
    initial begin // start testbench block
 
+      if (`GENERATE_VCD) begin
+         $dumpfile("divider.vcd");
+         $dumpvars;
+      end
+      
+      // set random seed for deterministic testing
+   `ifdef __ICARUS__
+      randomSeed = 42;
+      randomSeed = $random(randomSeed);
+   `else
+      $srandom(42); 
+   `endif
+      
       // initialize inputs
       i_dividend = 0;
       i_divisor = 0;
@@ -92,27 +114,33 @@ module test_divider;
          if (o_1iter_dividend !== exp_dividend || o_1iter_remainder != exp_remainder || o_1iter_quotient != exp_quotient) begin
             errors = errors + 1;
 
-            // break up all binary values into groups of four bits for readability
-            $display("[lc4_divider_one_iter] Error at test %04d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), i_remainder = %b %b %b %b (0x%H), i_quotient = %b %b %b %b (0x%H)", allTests,
-                     i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
-                     i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
-                     i_remainder[15:12], i_remainder[11:8], i_remainder[7:4], i_remainder[3:0], i_remainder,
-                     i_quotient[15:12], i_quotient[11:8], i_quotient[7:4], i_quotient[3:0], i_quotient); 
-
-            if (o_1iter_dividend !== exp_dividend) begin
-               $display("   o_dividend should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
-                        exp_dividend[15:12], exp_dividend[11:8], exp_dividend[7:4], exp_dividend[3:0], exp_dividend,
-                        o_1iter_dividend[15:12], o_1iter_dividend[11:8], o_1iter_dividend[7:4], o_1iter_dividend[3:0], o_1iter_dividend); 
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               // break up all binary values into groups of four bits for readability
+               $display("[lc4_divider_one_iter] Error at test %04d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), i_remainder = %b %b %b %b (0x%H), i_quotient = %b %b %b %b (0x%H)", allTests,
+                        i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
+                        i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
+                        i_remainder[15:12], i_remainder[11:8], i_remainder[7:4], i_remainder[3:0], i_remainder,
+                        i_quotient[15:12], i_quotient[11:8], i_quotient[7:4], i_quotient[3:0], i_quotient); 
+               
+               if (o_1iter_dividend !== exp_dividend) begin
+                  $display("   o_dividend should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
+                           exp_dividend[15:12], exp_dividend[11:8], exp_dividend[7:4], exp_dividend[3:0], exp_dividend,
+                           o_1iter_dividend[15:12], o_1iter_dividend[11:8], o_1iter_dividend[7:4], o_1iter_dividend[3:0], o_1iter_dividend); 
+               end
+               if (o_1iter_remainder !== exp_remainder) begin
+                  $display("   o_remainder should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
+                           exp_remainder[15:12], exp_remainder[11:8], exp_remainder[7:4], exp_remainder[3:0], exp_remainder,
+                           o_1iter_remainder[15:12], o_1iter_remainder[11:8], o_1iter_remainder[7:4], o_1iter_remainder[3:0], o_1iter_remainder); 
+               end
+               if (o_1iter_quotient !== exp_quotient) begin
+                  $display("   o_quotient should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
+                           exp_quotient[15:12], exp_quotient[11:8], exp_quotient[7:4], exp_quotient[3:0], exp_quotient,
+                           o_1iter_quotient[15:12], o_1iter_quotient[11:8], o_1iter_quotient[7:4], o_1iter_quotient[3:0], o_1iter_quotient); 
+               end
             end
-            if (o_1iter_remainder !== exp_remainder) begin
-               $display("   o_remainder should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
-                        exp_remainder[15:12], exp_remainder[11:8], exp_remainder[7:4], exp_remainder[3:0], exp_remainder,
-                        o_1iter_remainder[15:12], o_1iter_remainder[11:8], o_1iter_remainder[7:4], o_1iter_remainder[3:0], o_1iter_remainder); 
-            end
-            if (o_1iter_quotient !== exp_quotient) begin
-               $display("   o_quotient should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
-                        exp_quotient[15:12], exp_quotient[11:8], exp_quotient[7:4], exp_quotient[3:0], exp_quotient,
-                        o_1iter_quotient[15:12], o_1iter_quotient[11:8], o_1iter_quotient[7:4], o_1iter_quotient[3:0], o_1iter_quotient); 
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
             end
             
          end
@@ -153,26 +181,38 @@ module test_divider;
 
          // check if the expected and computed quotients match; print error otherwise
          if (exp_quotient !== o_div_quotient) begin
-            $display("[lc4_divider] Error at test %d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), o_quotient should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
-                     divTests,
-                     i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
-                     i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
-                     exp_quotient[15:12], exp_quotient[11:8], exp_quotient[7:4], exp_quotient[3:0], exp_quotient,
-                     o_div_quotient[15:12], o_div_quotient[11:8], o_div_quotient[7:4], o_div_quotient[3:0], o_div_quotient);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[lc4_divider] Error at test %d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), o_quotient should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
+                        divTests,
+                        i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
+                        i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
+                        exp_quotient[15:12], exp_quotient[11:8], exp_quotient[7:4], exp_quotient[3:0], exp_quotient,
+                        o_div_quotient[15:12], o_div_quotient[11:8], o_div_quotient[7:4], o_div_quotient[3:0], o_div_quotient);
+            end
             errors = errors + 1;
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
+            end
          end
          divTests = divTests + 1;
          allTests = allTests + 1; 
 
          // check if the expected and computed remainders match; print error otherwise
          if (exp_remainder !== o_div_remainder) begin
-            $display("[lc4_divider] Error at test %d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), o_remainder should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
-                     divTests,
-                     i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
-                     i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
-                     exp_remainder[15:12], exp_remainder[11:8], exp_remainder[7:4], exp_remainder[3:0], exp_remainder,
-                     o_div_remainder[15:12], o_div_remainder[11:8], o_div_remainder[7:4], o_div_remainder[3:0], o_div_remainder);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[lc4_divider] Error at test %d: i_dividend = %b %b %b %b (0x%H), i_divisor = %b %b %b %b (0x%H), o_remainder should have been %b %b %b %b (0x%H), but was %b %b %b %b (0x%H) instead",
+                        divTests,
+                        i_dividend[15:12], i_dividend[11:8], i_dividend[7:4], i_dividend[3:0], i_dividend,
+                        i_divisor[15:12], i_divisor[11:8], i_divisor[7:4], i_divisor[3:0], i_divisor,
+                        exp_remainder[15:12], exp_remainder[11:8], exp_remainder[7:4], exp_remainder[3:0], exp_remainder,
+                        o_div_remainder[15:12], o_div_remainder[11:8], o_div_remainder[7:4], o_div_remainder[3:0], o_div_remainder);
+            end
             errors = errors + 1;
+            if (`EXIT_AFTER_FIRST_ERROR) begin
+               $display("Exiting after first error..."); 
+               $finish;
+            end
          end
          divTests = divTests + 1;
          allTests = allTests + 1; 
@@ -180,10 +220,13 @@ module test_divider;
          #2; // wait some more
 
       end // end for
-
+      if (errors > `MAX_ERRORS_TO_DISPLAY) begin
+         $display("Additional %d errors NOT printed.", errors - `MAX_ERRORS_TO_DISPLAY);
+      end
       $display("Simulation finished: %d test cases %d errors", allTests, errors);
       printPoints(allTests, allTests - errors);
       $finish;
    end
 
 endmodule
+
