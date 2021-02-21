@@ -3,6 +3,8 @@
 Do not start on your processor module until your register file is
 fully implemented and tested.
 
+You will need to copy over your ALU code (`lc4_alu.v`, `lc4_cla.v` and `lc4_divider.v`) from previous labs.
+
 `lc4_single.v` already includes the module declaration with a
 commented list of all the inputs and outputs. It also includes the
 program counter. You are also free to use the instruction decoder in
