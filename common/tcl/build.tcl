@@ -50,6 +50,8 @@ if {[get_file_contents .step] == "synthesis"} { # just doing synthesis
         read_xdc [get_file_contents .constraint-files]
     }
 
+    # William's higher-optimization mode
+    #synth_design -top [get_file_contents .top-impl-module] -part xc7z020clg484-1 -retiming -directive AreaOptimized_high -flatten_hierarchy full -gated_clock_conversion on
     synth_design -top [get_file_contents .top-impl-module] -part xc7z020clg484-1
 }
 
@@ -69,6 +71,12 @@ if {[get_file_contents .step] == "synthesis"} {
 opt_design
 place_design
 route_design
+
+# William's higher-optimization mode
+# opt_design -directive ExploreSequentialArea
+# place_design -directive ExtraPostPlacementOpt
+# route_design -directive Explore
+# phys_opt_design -directive AggressiveExplore
 
 puts "Implementation complete!"
 
