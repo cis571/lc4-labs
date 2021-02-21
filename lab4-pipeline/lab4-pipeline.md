@@ -1,5 +1,7 @@
 ## Lab 4: Pipelined Processor
 
+You will need to copy over your ALU code (`lc4_alu.v`, `lc4_cla.v` and `lc4_divider.v`) from previous labs.
+
 Your pipelined LC4 processor must be fully-bypassed, and must predict all branches as not taken (including JMP, TRAP, and RTI). It should stall only in the load-to-use case. To be clear, when you encounter a load-to-use, you insert the NOP bubble as if it was between the load and the use. For example, if you have a `load` followed by an `add`, it would look in the pipeline like you have `load` followed by `NOP` followed by `add` - `load` in W, `NOP` in M, `add` in X.
 
 If there is a **degenerate BR** _B0_ whose target is the next insn (i.e., PC+1), then the not-taken and taken paths are the same for _B0_. However, you should not implement extra logic for this degenerate case. If _B0_ is not taken (based on the NZP registers) then you should not have a flush; if _B0_ is taken, then you should flush. Treat _B0_ just like any other BR, and consider only the taken/not-taken behavior when identifying mispredictions and flushing. Consider also a related degenerate BR _B1_ where the target is PC+2: when we detect the misprediction in Execute the correct target just so happens to be in Fetch, and we could get by with flushing just the Decode insn. Nevertheless, treat all BRs uniformly and flush both Fetch & Decode for _B1_ as well.
