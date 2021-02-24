@@ -8,7 +8,10 @@ You will need to copy over your ALU code (`lc4_alu.v`, `lc4_cla.v` and `lc4_divi
 `lc4_single.v` already includes the module declaration with a
 commented list of all the inputs and outputs. It also includes the
 program counter. You are also free to use the instruction decoder in
-`lc4_decoder.v`. The memory unit is handled outside the processor
+`lc4_decoder.v`, though changes you make to that file will not be included in the `.zip` file you submit. 
+If you instantiate an `lc4_decoder` in your design, it will use our version. If you want to make modifications to the decoder, you can copy the code into `lc4_single.v` and rename the module.
+
+The memory unit is handled outside the processor
 module and you don't need to worry about it. Any data your current
 instruction reads from memory will be provided on the
 `i_cur_dmem_data` input to your processor module. You will pass any
@@ -19,7 +22,7 @@ signals as outputs from your processor module. These outputs are all
 declared in the `lc4_processor` module and must be connected properly
 for the test scripts to work.
 
-All told, your implementation should need at most 150-200 lines of
+All told, your implementation should need around 150-200 lines of
 Verilog.
 
 ## Disallowed Verilog Operators
