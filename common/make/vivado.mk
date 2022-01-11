@@ -58,9 +58,9 @@ endif
 
 # run all tests
 ifdef NEEDS_TEST_CASE
-test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+vtest: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-test: $(SYNTH_SOURCES) $(TESTBENCH)
+vtest: $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 ifndef XILINX_VIVADO
 	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
@@ -72,11 +72,12 @@ endif
 
 # run tests with Icarus Verilog simulator
 ifdef NEEDS_TEST_CASE
-iv-test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-iv-test: $(SYNTH_SOURCES) $(TESTBENCH)
+test: $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 	@which iverilog || (echo "ERROR: can't find iverilog executable" && exit 1)
+	iverilog -v
 	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
 
