@@ -1,5 +1,7 @@
 /* TODO: INSERT NAME AND PENNKEY HERE */
 
+`timescale 1ns / 1ps
+
 /**
  * @param a first 1-bit input
  * @param b second 1-bit input
