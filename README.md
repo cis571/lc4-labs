@@ -2,13 +2,13 @@ This is the repository for the labs in [CIS 571: Computer Organization & Design]
 
 # Running the testbench on your local machine
 
-It is possible to run the various test cases on your local machine using an alternative Verilog simulator called [Icarus Verilog](http://iverilog.icarus.com) or `iverilog`. `iverilog` can generate a trace of your design in a `.vcd` file that you can then view in another program called [GTKWave](http://gtkwave.sourceforge.net). By running on your _local_ machine, you get potentially faster performance, and avoid network lag and connectivity issues to the biglab machines.
+It is possible to run the various test cases on your local machine using a Verilog simulator called [Icarus Verilog](http://iverilog.icarus.com) or `iverilog`. `iverilog` can generate a trace of your design in a `.vcd` file that you can then view in another program called [GTKWave](http://gtkwave.sourceforge.net). By running on your _local_ machine, you get potentially faster performance, and avoid network lag and connectivity issues to the biglab machines.
 
 Some caveats:
 
-* There are errors and warnings from `make synth` or `make impl` that **will only be shown by Vivado**. `make check` may find many of these but ultimately, **the autograder will continue to run the Vivado tools on biglab**. So there are still reasons to run things on biglab occasionally. 
-* Icarus Verilog sometimes stumbles on Verilog code that Vivado is perfectly happy with. So you may need to make small edits to your code to satisfy Icarus. Please post on piazza with problems/workarounds you discover to help others navigate this process.
-* It is also possible to install the Vivado compiler locally on a Linux or Windows machine. However it is quite heavyweight, requiring about ~30GB of hard drive space, and the scripts we have for Vivado can only be run on Linux. In contrast, `iverilog` and `gtkwave` combined take about 90MB.
+* There are errors and warnings from `make synth` or `make impl` that **will only be shown by Vivado**. `make check` may find many of these but there are still reasons to run things on biglab occasionally. 
+* Icarus Verilog sometimes stumbles on Verilog code that Vivado is perfectly happy with. So you may need to make small edits to your code to satisfy the other compiler. Please post on piazza with problems/workarounds you discover to help others navigate this process.
+* It is possible to install the Vivado compiler locally on a Linux or Windows machine. However it is quite heavyweight, requiring about ~30GB of hard drive space, and the scripts we have for Vivado can only be run on Linux. In contrast, `iverilog` and `gtkwave` combined take about 90MB.
 
 ### Generating VCD Files
 
@@ -30,7 +30,7 @@ Instructions for Ubuntu:
 sudo apt-get install iverilog gtkwave
 cd path-to-your-501-git-repo/whichever-lab-you're-working-on
 # edit your testbench file generate a VCD file
-TEST_CASE=test_alu make iv-test
+TEST_CASE=test_alu make test
 ```
 
 You can then run `gtkwave SOMETHING.vcd &` to view the execution of `test_alu`.
@@ -44,7 +44,7 @@ brew install icarus-verilog
 brew cask install gtkwave
 cd path-to-your-501-git-repo/whichever-lab-you're-working-on
 # edit your testbench file generate a VCD file
-TEST_CASE=test_alu make iv-test
+TEST_CASE=test_alu make test
 ```
 
 You can then launch `gtkwave`, and open the `.vcd` file with `File`=>`New Window`. On Joe's Mac, he can't launch `gtkwave` from the Terminal for some reason but can do so via Spotlight or by navigating to the `/Applications` folder. Running `open SOMETHING.vcd` also opens gtkwave automatically, as does double-clicking the `.vcd` file in Finder.
@@ -63,7 +63,7 @@ Then, you can open up the Windows command prompt or PowerShell (we recommend the
 ```
 cd path-to-your-501-git-repo\whichever-lab-you're-working-on
 # edit your testbench file generate a VCD file
-iv-test.cmd test_alu
+test.cmd test_alu
 ```
 This runs the `test_alu` test case and produces a `.vcd` file. You can substitute other test cases as well. 
 
