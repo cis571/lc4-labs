@@ -22,7 +22,7 @@
 `define MAX_ERRORS_TO_DISPLAY 15
 
 // set this to 1 to create a waveform file for easier debugging
-`define GENERATE_VCD 0
+`define GENERATE_VCD 1
 
 `define EOF 32'hFFFF_FFFF
 `define NEWLINE 10
@@ -152,6 +152,30 @@ module test_divider;
       if (input_file) begin
          $fclose(input_file);
       end
+
+      
+      // check /0
+      i_dividend = $random;
+      i_divisor = 16'h0000;
+      #8; // wait for divider
+      if (o_div_quotient !== 0 || o_div_remainder !== 0) begin
+         if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+            $display("[lc4_divider] Error at test %d: i_dividend = 0x%H, i_divisor = 0x%H, o_quotient and o_remainder should both be 0, but o_quotient was %b %b %b %b (0x%H) and o_remainder was %b %b %b %b (0x%H) instead",
+                     divTests,
+                     i_dividend,
+                     i_divisor,
+                     o_div_quotient[15:12], o_div_quotient[11:8], o_div_quotient[7:4], o_div_quotient[3:0], o_div_quotient,
+                     o_div_remainder[15:12], o_div_remainder[11:8], o_div_remainder[7:4], o_div_remainder[3:0], o_div_remainder);
+         end
+         errors = errors + 1;
+         if (`EXIT_AFTER_FIRST_ERROR) begin
+            $display("Exiting after first error..."); 
+            $finish;
+         end
+      end
+      divTests = divTests + 1;
+      allTests = allTests + 1;
+      
       
       // loop 2000 times, with a one-indexed number for each test
       for (divTests = 0; divTests < 4000; __ignore = __ignore + 1) begin
@@ -160,14 +184,10 @@ module test_divider;
          i_dividend = $random;
          i_divisor = $random;
 
-         if (divTests >= 2000) begin
-            i_divisor = 16'h0000;
-         end
-
          #8; // wait for the divider to do its work
 
          // computed expected result
-         /* It's unclear how the Xilinx sim handles division/modulo by zero,
+         /* It's unclear how the simulators handle division/modulo by zero,
             so we set the expected values to zero first, and only compute
             the actual division/modulo if i_divisor is non-zero.
          */
