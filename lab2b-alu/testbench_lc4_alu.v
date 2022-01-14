@@ -7,7 +7,7 @@
 `define MAX_ERRORS_TO_DISPLAY 15
 
 // set this to 1 to create a waveform file for easier debugging
-`define GENERATE_VCD 0
+`define GENERATE_VCD 1
 
 `define NULL 0
 
