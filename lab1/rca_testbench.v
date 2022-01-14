@@ -4,6 +4,13 @@
 
 `timescale 1ns / 1ps
 
+// change this to adjust how many errors are printed out
+`define MAX_ERRORS_TO_DISPLAY 15
+
+// set this to 1 to create a waveform file for easier debugging
+`define GENERATE_VCD 1
+
+
 module test_adders; 
 
 `include "print_points.v"
@@ -19,24 +26,33 @@ module test_adders;
    halfadder ha(.a(a), .b(b), .s(actual_ha_sum), .cout(actual_ha_cout));
 
    reg         cin; 
-   reg         exp_fa_cout, exp_fa_sum; 
+   wire         exp_fa_cout, exp_fa_sum; 
    wire        actual_fa_sum, actual_fa_cout;
    fulladder fa(.cin(cin), .a(a), .b(b), .s(actual_fa_sum), .cout(actual_fa_cout));
+   assign {exp_fa_cout,exp_fa_sum} =  a + b + cin;
 
    reg [1:0]   a2, b2;
-   reg [1:0]   exp_fa2_sum;
-   reg         exp_fa2_cout; 
+   wire [1:0]   exp_fa2_sum;
+   wire         exp_fa2_cout; 
    wire [1:0]  actual_fa2_sum;
    wire        actual_fa2_cout; 
-   fulladder2 fa2(.cin(cin), .a(a2), .b(b2), .s(actual_fa2_sum), .cout(actual_fa2_cout)); 
+   fulladder2 fa2(.cin(cin), .a(a2), .b(b2), .s(actual_fa2_sum), .cout(actual_fa2_cout));
+   assign {exp_fa2_cout,exp_fa2_sum} =  a2 + b2 + cin;
 
-   reg [3:0]   a4, b4, exp_rca4_sum;
+   reg [3:0]   a4, b4;
+   wire [3:0] exp_rca4_sum;
    wire [7:0]  actual_rca4_sum; 
    rca4 r0(.SWITCH({b4,a4}), .LED(actual_rca4_sum));
+   assign {exp_rca4_sum} =  a4 + b4;
    
    
    initial begin // start testbench block
 
+      if (`GENERATE_VCD) begin
+         $dumpfile("rca.vcd");
+         $dumpvars;
+      end
+      
       // initialize inputs
       a = 0;
       b = 0;
@@ -58,23 +74,31 @@ module test_adders;
          case (i)
            0, 3: begin
               if (0 !== actual_ha_sum) begin
-                 $display("[halfadder] ERROR: %b + %b should produce sum=0 but was %b instead", a, b, actual_ha_sum);
+                 if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+                    $display("[halfadder] ERROR: %b + %b should produce sum=0 but was %b instead", a, b, actual_ha_sum);
+                 end
                  errors = errors + 1;
               end
            end
            1, 2: begin if (1 !== actual_ha_sum) begin
-              $display("[halfadder] ERROR: %b + %b should produce sum=1 but was %b instead", a, b, actual_ha_sum);
+              if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+                 $display("[halfadder] ERROR: %b + %b should produce sum=1 but was %b instead", a, b, actual_ha_sum);
+              end
               errors = errors + 1; 
            end
            end
          endcase
          
          if ((i < 3) && 0 !== actual_ha_cout) begin
-            $display("[halfadder] ERROR: %b + %b should produce cout=0 but was %b instead", a, b, actual_ha_cout);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[halfadder] ERROR: %b + %b should produce cout=0 but was %b instead", a, b, actual_ha_cout);
+            end
             errors = errors + 1; 
          end         
          if ((i == 3) && 1 !== actual_ha_cout) begin
-            $display("[halfadder] ERROR: %b + %b should produce cout=1 but was %b instead", a, b, actual_ha_cout);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[halfadder] ERROR: %b + %b should produce cout=1 but was %b instead", a, b, actual_ha_cout);
+            end
             errors = errors + 1; 
          end
       end
@@ -91,14 +115,16 @@ module test_adders;
          #6; // wait for full adder to produce result
          tests = tests + 2; // test sum and cout
 
-         assign {exp_fa_cout,exp_fa_sum} =  a + b + cin;
-
          if (exp_fa_cout !== actual_fa_cout) begin
-            $display("[fulladder] ERROR: %b + %b should produce cout=%b but was %b instead", a, b, exp_fa_cout, actual_fa_cout);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[fulladder] ERROR: %b + %b should produce cout=%b but was %b instead", a, b, exp_fa_cout, actual_fa_cout);
+            end
             errors = errors + 1; 
          end
          if (exp_fa_sum !== actual_fa_sum) begin
-            $display("[fulladder] ERROR: %b + %b should produce sum=%b but was %b instead", a, b, exp_fa_sum, actual_fa_sum);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[fulladder] ERROR: %b + %b should produce sum=%b but was %b instead", a, b, exp_fa_sum, actual_fa_sum);
+            end
             errors = errors + 1; 
          end 
       end
@@ -113,15 +139,17 @@ module test_adders;
 
          #6; // wait for fulladder2 to produce result
          tests = tests + 2; // test sum and cout
-
-         assign {exp_fa2_cout,exp_fa2_sum} =  a2 + b2 + cin;
          
          if (exp_fa2_cout !== actual_fa2_cout) begin
-            $display("[fulladder2] ERROR: %b + %b should produce cout=%b but was %b instead", a2, b2, exp_fa2_cout, actual_fa2_cout);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[fulladder2] ERROR: %b + %b should produce cout=%b but was %b instead", a2, b2, exp_fa2_cout, actual_fa2_cout);
+            end
             errors = errors + 1; 
          end
          if (exp_fa2_sum !== actual_fa2_sum) begin
-            $display("[fulladder2] ERROR: %b + %b should produce sum=%b but was %b instead", a2, b2, exp_fa2_sum, actual_fa2_sum);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[fulladder2] ERROR: %b + %b should produce sum=%b but was %b instead", a2, b2, exp_fa2_sum, actual_fa2_sum);
+            end
             errors = errors + 1; 
          end 
       end
@@ -136,15 +164,18 @@ module test_adders;
 
          #6; // wait for rca4 to produce result
          tests = tests + 1; // test sum
-
-         assign {exp_rca4_sum} =  a4 + b4;
          
          if (exp_rca4_sum !== actual_rca4_sum) begin
-            $display("[rca4] ERROR: %b + %b should produce sum=%b but was %b instead", a4, b4, exp_rca4_sum, actual_rca4_sum);
+            if (errors < `MAX_ERRORS_TO_DISPLAY) begin
+               $display("[rca4] ERROR: %b + %b should produce sum=%b but was %b instead", a4, b4, exp_rca4_sum, actual_rca4_sum);
+            end
             errors = errors + 1; 
          end 
       end
-      
+
+      if (errors > `MAX_ERRORS_TO_DISPLAY) begin
+         $display("Additional %d errors NOT printed.", errors - `MAX_ERRORS_TO_DISPLAY);
+      end      
       $display("Simulation finished: %d test cases %d errors", tests, errors);
       printPoints(tests, tests - errors);
       $finish;
