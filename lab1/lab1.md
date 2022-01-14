@@ -28,8 +28,6 @@ You can run the tests by cd-ing into the `lab1` directory (where this file is)
 and running the command `make test`. When you run the tests on the initial 
 `rca.v` code, lots of tests will fail.
 
-> Note also that when you first run `make test` you'll encounter an error that Vivado can't be found, and to run the command `source /home1/c/cis371/software/Vivado/2017.4/settings64.sh` to fix it (yes, the use of the `cis371` course directory is intentional, it's where Vivado is installed). This command sets up your path so that the Vivado tools are accessible. To avoid having to run this command every time you login to biglab, you can add it to your `~/.bash_profile` file and it will automatically get run every time you login.
-
 When a test fails, it tells you that something is wrong,
 but it doesn't explain why. Careful testing of each module can be helpful in
 limiting the amount of code you need to examine: if we had only given tests for
@@ -70,6 +68,8 @@ As you resolve these warnings, re-run `make check` to see what code analysis fin
 
 ## Run synthesis
 
+> Note also that when you first run `make synth` you'll encounter an error that Vivado can't be found, and to run the command `source /home1/c/cis371/software/Vivado/2017.4/settings64.sh` to fix it (yes, the use of the `cis371` course directory is intentional, it's where Vivado is installed). This command sets up your path so that the Vivado tools are accessible. To avoid having to run this command every time you login to biglab, you can add it to your `~/.bash_profile` file and it will automatically get run every time you login.
+
 Now cd to the `lab1` directory (where this file
 lives) and run the command `make synth`. This will launch synthesis, and it will
 take about 2 minutes to complete. If something is really wrong with a design, it
@@ -98,7 +98,7 @@ perhaps replaced by another one - sometimes one bug can mask another!
 
 One important thing to note - you should never have any **CRITICAL WARNINGS** in your design. If Vivado identifies a hard **ERROR** it will stop synthesis/implementation, but critical warnings are often permitted through. But it is in your best interest to fix them.
 
-> You may have noticed that `make check` is _much_ faster to run than `make synth`. This is our first semester utilizing the `yosys` tool that is run by `make check`, and it's not yet clear if it detects all of the issues that Vivado's synthesis can detect. So we recommend running both, since it's always nice to let the computers find bugs for us. If your design exhibits an issue that is detected by `make synth` but not by `make check` (or vice-versa), please post on Piazza as we'd love to hear about it!
+> You may have noticed that `make check` is _much_ faster to run than `make synth`. This is our first semester utilizing the `yosys` tool that is run by `make check`, and it's not yet clear if it detects all of the issues that Vivado's synthesis can detect. So we recommend running both, since it's always nice to let the computers find bugs for us. If your design exhibits an issue that is detected by `make synth` but not by `make check` (or vice-versa), we'd love to hear about it!
 
 #### Benign Warnings
 
@@ -174,9 +174,9 @@ You can edit these to change whether the testbench exits after the first failure
 
 ## Submitting Code
 
-Once your code passes all the tests and the demo works as expected, you are ready to submit it **via Canvas**. Run the `make zip` command to generate an archive file `rca.zip` with the appropriate contents (your Verilog code and the bitstream), and then upload this file to Canvas. Be sure to run `make impl` prior to `make zip`, so that the bitstream is included with your submission.
+Once your code passes all the tests and the demo works as expected, you are ready to submit it **via Gradescope**. Run the `make zip` command to generate an archive file `rca.zip` with the appropriate contents (your Verilog code and the bitstream), and then upload this file to Gradescope. Be sure to run `make impl` prior to `make zip`, so that the bitstream is included with your submission.
 
-## (Not for Spring 2021) Zedboard Demo
+## (Not for Spring 2022) Zedboard Demo
 
 The next step is **running the demo** of your working design on the Zedboards allocated to your group. The toggle switches at the bottom of the Zedboard are used to input two 4-bit integers, and their 4-bit sum is displayed on the lowest-order 4 LEDs. 
 
@@ -197,7 +197,7 @@ Lab in Moore 200, and a few in Towne M70.
 
 Once you login to the machine, follow the [instructions for connecting the
 ZedBoard](https://docs.google.com/presentation/d/1spwy8Ech3oLO72_VbKN5WkDlwbWy0WWISxv_lMjhRkg/edit?usp=sharing),
-and then switch to the terminal (the Konsole application works well). From the
+and then switch to the terminal application. From the
 lab1 directory, run the command `make program`. You will be prompted for the
 `.bit` bitstream file you want to use, and then the FPGA should get programmed
 accordingly.
@@ -208,4 +208,4 @@ You can also program the ZedBoard via the Vivado GUI. See [instructions for Wind
 
 You can use similar instructions to program via the Vivado GUI on a Linux machine. Start Vivado by running the usual `source ...` command to get the Vivado tools onto your PATH, then run the command `vivado &` on the command line and the GUI should appear within a few moments. You can then follow the Windows tutorial linked above as the menus are identical.
 
-In our experience, the Linux version is substantially more responsive than the Windows version (not the fault of Windows, it's due to the way that the Windows version of Vivado is installed onto a network drive).
+In our experience, the Linux version is substantially more responsive than the Windows version (not the fault of Windows, it seems to be due to the way that the Windows version of Vivado is installed onto a network drive).
