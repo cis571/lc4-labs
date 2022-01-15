@@ -1,6 +1,7 @@
 /* TODO: INSERT NAME AND PENNKEY HERE */
 
 `timescale 1ns / 1ps
+`default_nettype none
 
 /**
  * @param a first 1-bit input
