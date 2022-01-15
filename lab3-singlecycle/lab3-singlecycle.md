@@ -110,7 +110,7 @@ Re-run `make impl` and see if you achieve timing closure with the slower clock. 
 
 ### Reporting timing results
 
-Your timing results (and metrics for area and power) are automatically included in the .zip file you submit via Canvas. We'll use this to look at resource consumption across all the designs in the class.
+Your timing results (and metrics for area and power) are automatically included in the .zip file you submit. We'll use this to look at resource consumption across all the designs in the class.
 
 ## (Not for Spring 2021) Demo
 
