@@ -12,16 +12,13 @@ Some caveats:
 
 ### Generating VCD Files
 
-[VCD files](https://en.wikipedia.org/wiki/Value_change_dump) are a recording of the behavior of all of the wires in your design over time. These recordings are enabled by default. Whenever you run `make test` you may notice that a `.vcd` file generated. The exact name of this file varies by lab. You can view a `.vcd` file using the GtkWave program (see below) to see exactly what your design is doing.
+[VCD files](https://en.wikipedia.org/wiki/Value_change_dump) are a recording of the behavior of all of the wires in your design over time. These recordings are enabled by default for Labs 1 & 2, and disabled by default for the later labs to speed up simulation. When you run `make test` you may notice that a `.vcd` file generated. The exact name of this file varies by lab. You can view a `.vcd` file using the GtkWave program (see below) to see exactly what every wire in your design is doing.
 
-You can also turn off recordings (to speed up the tests a bit) by making a small edit to your lab's `testbench_*.v` file. Find this code near the top:
-```
-`define GENERATE_VCD 1
-```
-and change the `1` to `0`, so it looks like this instead:
+You can also toggle recordings by making a small edit to your lab's `testbench_*.v` file. Find this code near the top:
 ```
 `define GENERATE_VCD 0
 ```
+and change the `0` to `1`, or vice-versa, to enable or disable recordings, respectively.
 
 ### Linux
 
