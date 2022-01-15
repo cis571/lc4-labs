@@ -268,10 +268,9 @@ module test_processor;
          if (test_stall_A !== 2'd0 && test_stall_B !== 2'd0) begin
             if (consecutive_stalls >= 5) begin
                $display("Error at cycle %d: your pipeline has stalled for more than 5 cycles in a row, which should never happen. This might indicate your pipeline will be stuck stalling forever.", num_cycles);
-               if (`EXIT_AFTER_FIRST_ERROR) begin
-                  $display("Exiting after first error..."); 
-                  $finish;
-               end
+               // exit testbench if pipeline gets stuck
+               printPoints(tests, 0); 
+               $finish;
             end
             consecutive_stalls = consecutive_stalls + 1;
         end else begin
