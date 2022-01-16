@@ -6,7 +6,6 @@ then
     exit 1
 fi
 
-rm -rf xsim.dir/ webtalk* xsim* xelab.* sim.wdb
-echo -n verilog mylib $2 $3 $4 $5 $6 $7 > .prj
-xelab -cc gcc --debug off --prj .prj --snapshot snapshot.sim --lib mylib mylib.$1
-xsim snapshot.sim --runall --stats -wdb sim.wdb
+which iverilog || (echo "ERROR: can't find the 'iverilog' program" && exit 1)
+iverilog -Wall -Iinclude -s $1 -o a.out $2 $3 $4 $5 $6 $7
+./a.out
