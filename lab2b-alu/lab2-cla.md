@@ -83,9 +83,9 @@ of hardware. Note also that `for` loops can be nested.
 We'll test your `gpn` module with various parameterization values of `N>=2`, and
 check that your code produces the same output as our reference version. Note
 that we are not releasing test cases for `gpn` (though you are welcome to write
-your own), and you can see the autograder output as well.
+your own), but you can see some of the failing tests from the autograder's output.
 
-You can submit your `lc4_cla.v` file (with your implementation of `gpn` in it) to the separate Lab 2 Extra Credit assignment.
+You can submit your `lc4_cla.v` file (with your implementation of `gpn` in it) to the separate _Lab 2B: CLA GpN Extra Credit_ assignment.
 
 <!---
 It seems likely that a 2-level CLA adder that is parameterizable in the width of
