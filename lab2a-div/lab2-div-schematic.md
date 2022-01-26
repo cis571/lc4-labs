@@ -1,0 +1,7 @@
+Draw a detailed schematic (by hand or computerized) of your hardware design for the divider (described [in the Lab 2 instructions](lab2-div.md)). You should include signal names, module names, port names and bus widths. You can leave a module as a black box to simplify things, but then you should show elsewhere on the schematic what that black box does. Simple modules (muxes, shifters, logical operators, registers) can be drawn as in the lecture slides and don't need further elaboration. For the `lc4_divider` module, you don't need to draw all 16 instances of the `lc4_divider_one_iter` module, but should show **the first two and the last one** to demonstrate that you know how to wire them together.
+
+See also [the example schematic for Lab 1](../lab1/lab1-schematic.pdf). Grading of the schematics will be on a full-credit/no-credit basis. We won't rigorously examine the correctness of your design, but instead aim to give you quick feedback about obvious flaws. Still, it behooves you to invest time in your schematic to catch bugs up-front, instead of looking at waveforms or Verilog.
+
+**Please make sure your PDFs are rotated correctly, and are not insanely huge resolution!** We will take points off for these since they make grading much more difficult.
+
+When your schematic is complete, you can translate it directly into Verilog. We encourage you to keep your schematic up-to-date as your design evolves, as it will help ensure your design works as required.
