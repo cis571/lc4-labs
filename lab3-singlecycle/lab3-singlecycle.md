@@ -3,7 +3,7 @@
 Do not start on your processor module until your register file is
 fully implemented and tested.
 
-You will need to copy over your ALU code (`lc4_alu.v`, `lc4_cla.v` and `lc4_divider.v`) from previous labs.
+You will need to copy over your ALU code (`lc4_alu.v`, `lc4_cla.v` and `lc4_divider.v`) from previous labs, and also have [a fully-functioning register file](../lab3-regfile/lab3-regfile.md) in `lc4_regfile.v`.
 
 `lc4_single.v` already includes the module declaration with a
 commented list of all the inputs and outputs. It also includes the
