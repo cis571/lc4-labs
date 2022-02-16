@@ -144,4 +144,4 @@ Use the scopes pane in the Vivado debugger to select which module's wires are sh
 
 ## Demo
 
-There is no demo for this lab.
+TBD

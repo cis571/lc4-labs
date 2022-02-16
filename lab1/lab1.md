@@ -169,7 +169,7 @@ You can edit this to change how many errors are printed out. Often, the first er
 
 Once your code passes all the tests, you are ready to submit it **via Gradescope**. Run the `make zip` command to generate an archive file `rca.zip` with the appropriate contents (your Verilog code and the bitstream), and then upload this file to Gradescope. Be sure to run `make impl` prior to `make zip`, so that the bitstream is included with your submission.
 
-## (Not for Spring 2022) Zedboard Demo
+## Zedboard Demo
 
 The next step is **running the demo** of your working design on the Zedboards allocated to your group. The toggle switches at the bottom of the Zedboard are used to input two 4-bit integers, and their 4-bit sum is displayed on the lowest-order 4 LEDs. 
 

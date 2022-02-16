@@ -112,7 +112,7 @@ Re-run `make impl` and see if you achieve timing closure with the slower clock. 
 
 Your timing results (and metrics for area and power) are automatically included in the .zip file you submit. We'll use this to look at resource consumption across all the designs in the class.
 
-## (Not for Spring 2021) Demo
+## Demo
 
 For the demo, you will write a simple LC4 assembly program that displays a string to the ZedBoard's VGA display. Most of the code has been written for you, but you need to come up with a string you want to display and call appropriate library functions to send the string to the display. In the file `lab3-demo.asm`, you should write assembly code at `PROGRAM_START` to write your desired string. You will find the code in `DRAW_CHAR` function especially helpful, as it takes an ASCII character, translates it into a pixel bitmap, and sends it to the VGA display at the desired x,y coordinates.
 
