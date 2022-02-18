@@ -22,6 +22,8 @@ signals as outputs from your processor module. These outputs are all
 declared in the `lc4_processor` module and must be connected properly
 for the test scripts to work.
 
+You **do not need** to model the PSR register, or track/enforce privileged code/data access in your design.
+
 All told, your implementation should need around 150-200 lines of
 Verilog.
 
