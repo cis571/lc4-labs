@@ -126,3 +126,8 @@ TEST_CASE=lab3-demo make impl
 The first command uses PennSim to create a `lab3-demo.hex` file containing the code/data memory contents specified by `lab3-demo.asm`. The second command runs implementation, using `lab3-demo.hex` as the initial state for your processor's memory. 
 
 Once you program the ZedBoard, raise the rightmost switch on the ZedBoard (`SW0`) to set the global write-enable (`gwe`) signal. The right-most LED (`LD0`) shows the value of the `gwe` signal. Your processor should start executing, and your string should display on an attached VGA monitor. VGA cables are in the ZedBoard lockers, and there are monitors with VGA inputs in the K Lab and Moore 100A.
+
+## Submitting
+
+Run `make zip` and submit the `single.zip` file to Gradescope.
+
