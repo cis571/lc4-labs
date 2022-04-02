@@ -144,4 +144,11 @@ Use the scopes pane in the Vivado debugger to select which module's wires are sh
 
 ## Demo
 
-TBD
+What's going on in that mysterious wireframe test case, anyway? Let's find out! For this demo, you'll need a working version of the Lab 5B code and to have your ZedBoard attached to a VGA monitor. VGA cables are in the ZedBoard lockers, and there are monitors with VGA inputs in several of the SEAS computer labs.
+
+First, build an FPGA bitstream containing the wireframe program:
+```
+TEST_CASE=wireframe make impl
+```
+
+Once you program the ZedBoard with the resulting `superscalar.bit` file, raise the rightmost switch on the ZedBoard (`SW0`) to set the global write-enable (`gwe`) signal. The right-most LED (`LD0`) shows the value of the `gwe` signal. Your processor should start executing, and you should see the output from the wireframe program on the attached VGA monitor.
