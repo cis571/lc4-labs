@@ -46,7 +46,7 @@ help:
 
 check: $(SYNTH_SOURCES)
 	@echo -e "Writing check output to check.log..."
-	/home1/c/cis571/tools/yosys -p "check; hierarchy -check; flatten; check -assert" $^ | tee check.log
+	/home1/c/cis5710/tools/yosys -p "check; hierarchy -check; flatten; check -assert" $^ | tee check.log
 
 # run synthesis to identify code errors/warnings
 synth: setup-files $(SYNTH_SOURCES)
@@ -76,7 +76,7 @@ test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
 test: $(SYNTH_SOURCES) $(TESTBENCH)
 endif
-	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program, you need to update your PATH variable. If you are on biglab, run export PATH=$$PATH:/home1/c/cis571/tools/bin/ and see https://opensource.com/article/17/6/set-path-linux for how to avoid doing this each time you login.' && exit 1)
+	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program, you need to update your PATH variable. If you are on biglab, run export PATH=$$PATH:/home1/c/cis5710/tools/bin/ and see https://opensource.com/article/17/6/set-path-linux for how to avoid doing this each time you login.' && exit 1)
 	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
 
