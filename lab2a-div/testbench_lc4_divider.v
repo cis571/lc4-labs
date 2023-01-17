@@ -105,13 +105,13 @@ module test_divider;
       #2;
 
       // read in the input trace one line at a time
-      while (7 == $fscanf(input_file, "%b %b %b %b %b %b %b", i_dividend, i_divisor, i_remainder, i_quotient, exp_dividend, exp_remainder, exp_quotient)) begin
+      while (8 == $fscanf(input_file, "%d:%b %b %b %b %b %b %b", __ignore, i_dividend, i_divisor, i_remainder, i_quotient, exp_dividend, exp_remainder, exp_quotient)) begin
          #8; // wait for the divider to do its thing
          
          allTests = allTests + 1;
          
          // print an error if one occurred
-         if (o_1iter_dividend !== exp_dividend || o_1iter_remainder != exp_remainder || o_1iter_quotient != exp_quotient) begin
+         if (o_1iter_dividend !== exp_dividend || o_1iter_remainder !== exp_remainder || o_1iter_quotient !== exp_quotient) begin
             errors = errors + 1;
 
             if (errors < `MAX_ERRORS_TO_DISPLAY) begin

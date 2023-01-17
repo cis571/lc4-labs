@@ -42,7 +42,7 @@ int divide(int dividend, int divisor) {
 
 ## Corner case: dividing by 0
 
-A divisor of 0 is a special case, `lc4_divider` should output 0 as `o_remainder` and `o_quotient` in this case.
+A divisor of 0 is a special case, `lc4_divider` should output 0 as `o_remainder` *and* `o_quotient` in this case.
 
 `lc4_divider_one_iter` doesn't need to handle this case, and can assume that `i_divisor` is always non-zero.
 
@@ -68,4 +68,4 @@ Makefile with the command `make test`.
 
 ## Submitting your code
 
-As with previous labs, submit your code via Gradescope. You should submit just your `lc4_divider.v` file, there's no need to run `make zip`.
+As with previous labs, submit your code via Gradescope. You should submit only your `lc4_divider.v` file, there's no need to run `make zip`.
