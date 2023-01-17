@@ -44,26 +44,24 @@ time=time -f "Vivado took %E m:s and %M KB"
 help:
 	@echo -e "Valid targets are: check synth test debug impl zip program boot clean"
 
+pathcheck:
+	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
+	@which vivado || (echo 'ERROR: cannot find the `vivado` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
+
 check: $(SYNTH_SOURCES)
 	@echo -e "Writing check output to check.log..."
 	/home1/c/cis5710/tools/yosys -p "check; hierarchy -check; flatten; check -assert" $^ | tee check.log
 
 # run synthesis to identify code errors/warnings
-synth: setup-files $(SYNTH_SOURCES)
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
-endif
+synth: pathcheck setup-files $(SYNTH_SOURCES)
 	echo -n "synthesis" > .step
 	$(time) vivado -mode batch -source $(TCL_DIR)/build.tcl
 
 # run all tests
 ifdef NEEDS_TEST_CASE
-vtest: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+vtest: pathcheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-vtest: $(SYNTH_SOURCES) $(TESTBENCH)
-endif
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
+vtest: pathcheck $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 	rm -rf xsim.dir/
 	echo -n verilog mylib $^ > .prj
@@ -72,41 +70,31 @@ endif
 
 # run tests with Icarus Verilog simulator
 ifdef NEEDS_TEST_CASE
-test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+test: pathcheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-test: $(SYNTH_SOURCES) $(TESTBENCH)
+test: pathcheck $(SYNTH_SOURCES) $(TESTBENCH)
 endif
-	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program, you need to update your PATH variable. If you are on biglab, run export PATH=$$PATH:/home1/c/cis5710/tools/bin/ and see https://opensource.com/article/17/6/set-path-linux for how to avoid doing this each time you login.' && exit 1)
 	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
 
 
 # investigate design via GUI debugger
 ifdef NEEDS_TEST_CASE
-debug: setup-files .set_testcase.v
+debug: pathcheck setup-files .set_testcase.v
 else
-debug: setup-files
-endif
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
+debug: pathcheck setup-files
 endif
 	rm -rf .debug-project
 #	echo -n " .set_testcase.v" >> .synthesis-source-files
 	vivado -mode batch -source $(TCL_DIR)/debug.tcl
 
 # run synthesis & implementation to generate a bitstream
-impl: setup-files $(IMPL_SOURCES)
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
-endif
+impl: pathcheck setup-files $(IMPL_SOURCES)
 	echo -n "implementation" > .step
 	$(time) vivado -mode batch -source $(TCL_DIR)/build.tcl
 
 # program the device with user-specified bitstream
-program:
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
-endif
+program: pathcheck
 	@echo -n "Specify .bit file to use to program FPGA, then press <ENTER> [leave blank for output/$(BITSTREAM_FILENAME)]: "
 	@read bitfile && if [ -z "$$bitfile" ]; then export BITSTREAM_FILE="output/$(BITSTREAM_FILENAME)" ; else export BITSTREAM_FILE=$$bitfile; fi && echo $$BITSTREAM_FILE && $(time) vivado -mode batch -notrace -source $(TCL_DIR)/program.tcl
 
@@ -153,10 +141,7 @@ pennsim:
 	java -jar $(COMMON_DIR)/pennsim/PennSim.jar -t -s $(PENNSIM_SCRIPT)
 
 # make BOOT.BIN image for programming FPGA from an SD card
-boot: output/$(BITSTREAM_FILENAME) $(SDBOOT_DIR)/zynq_fsbl_0.elf
-ifndef XILINX_VIVADO
-	$(error ERROR cannot find Vivado, run "source /home1/c/cis371/software/Vivado/2017.4/settings64.sh")
-endif
+boot: pathcheck output/$(BITSTREAM_FILENAME) $(SDBOOT_DIR)/zynq_fsbl_0.elf
 	echo "the_ROM_image:{[bootloader]"$(SDBOOT_DIR)/zynq_fsbl_0.elf > $(SDBOOT_BIF)
 	echo output/$(BITSTREAM_FILENAME)"}" >> $(SDBOOT_BIF)
 	bootgen -image $(SDBOOT_BIF) -arch zynq -o output/BOOT.BIN
