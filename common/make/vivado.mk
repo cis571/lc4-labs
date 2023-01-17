@@ -44,9 +44,6 @@ time=time -f "Vivado took %E m:s and %M KB"
 help:
 	@echo -e "Valid targets are: check synth test debug impl zip program boot clean"
 
-icarusCheck:
-	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
-
 vivadoCheck:
 	@which vivado || (echo 'ERROR: cannot find the `vivado` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
 	@which xelab || (echo 'ERROR: cannot find `xelab` program' && exit 1)
@@ -75,10 +72,11 @@ endif
 
 # run tests with Icarus Verilog simulator
 ifdef NEEDS_TEST_CASE
-test: icarusCheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+test: $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-test: icarusCheck $(SYNTH_SOURCES) $(TESTBENCH)
+test: $(SYNTH_SOURCES) $(TESTBENCH)
 endif
+	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
 	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
 
