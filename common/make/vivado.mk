@@ -44,24 +44,29 @@ time=time -f "Vivado took %E m:s and %M KB"
 help:
 	@echo -e "Valid targets are: check synth test debug impl zip program boot clean"
 
-pathcheck:
+icarusCheck:
 	@which iverilog || (echo 'ERROR: cannot find the `iverilog` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
+
+vivadoCheck:
 	@which vivado || (echo 'ERROR: cannot find the `vivado` program. If you are on biglab, run `source /home1/c/cis5710/tools/cis5710-update-path.sh`' && exit 1)
+	@which xelab || (echo 'ERROR: cannot find `xelab` program' && exit 1)
+	@which xsim || (echo 'ERROR: cannot find `xsim` program' && exit 1)
+	@which bootgen || (echo 'ERROR: cannot find `bootgen` program' && exit 1)
 
 check: $(SYNTH_SOURCES)
 	@echo -e "Writing check output to check.log..."
 	/home1/c/cis5710/tools/yosys -p "check; hierarchy -check; flatten; check -assert" $^ | tee check.log
 
 # run synthesis to identify code errors/warnings
-synth: pathcheck setup-files $(SYNTH_SOURCES)
+synth: vivadoCheck setup-files $(SYNTH_SOURCES)
 	echo -n "synthesis" > .step
 	$(time) vivado -mode batch -source $(TCL_DIR)/build.tcl
 
 # run all tests
 ifdef NEEDS_TEST_CASE
-vtest: pathcheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+vtest: vivadoCheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-vtest: pathcheck $(SYNTH_SOURCES) $(TESTBENCH)
+vtest: vivadoCheck $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 	rm -rf xsim.dir/
 	echo -n verilog mylib $^ > .prj
@@ -70,9 +75,9 @@ endif
 
 # run tests with Icarus Verilog simulator
 ifdef NEEDS_TEST_CASE
-test: pathcheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
+test: icarusCheck $(SYNTH_SOURCES) $(TESTBENCH) .set_testcase.v
 else
-test: pathcheck $(SYNTH_SOURCES) $(TESTBENCH)
+test: icarusCheck $(SYNTH_SOURCES) $(TESTBENCH)
 endif
 	iverilog -Wall -Iinclude -s $(TOP_TESTBENCH_MODULE) -o a.out $^
 	./a.out
@@ -80,21 +85,21 @@ endif
 
 # investigate design via GUI debugger
 ifdef NEEDS_TEST_CASE
-debug: pathcheck setup-files .set_testcase.v
+debug: vivadoCheck setup-files .set_testcase.v
 else
-debug: pathcheck setup-files
+debug: vivadoCheck setup-files
 endif
 	rm -rf .debug-project
 #	echo -n " .set_testcase.v" >> .synthesis-source-files
 	vivado -mode batch -source $(TCL_DIR)/debug.tcl
 
 # run synthesis & implementation to generate a bitstream
-impl: pathcheck setup-files $(IMPL_SOURCES)
+impl: vivadoCheck setup-files $(IMPL_SOURCES)
 	echo -n "implementation" > .step
 	$(time) vivado -mode batch -source $(TCL_DIR)/build.tcl
 
 # program the device with user-specified bitstream
-program: pathcheck
+program: vivadoCheck
 	@echo -n "Specify .bit file to use to program FPGA, then press <ENTER> [leave blank for output/$(BITSTREAM_FILENAME)]: "
 	@read bitfile && if [ -z "$$bitfile" ]; then export BITSTREAM_FILE="output/$(BITSTREAM_FILENAME)" ; else export BITSTREAM_FILE=$$bitfile; fi && echo $$BITSTREAM_FILE && $(time) vivado -mode batch -notrace -source $(TCL_DIR)/program.tcl
 
@@ -141,7 +146,7 @@ pennsim:
 	java -jar $(COMMON_DIR)/pennsim/PennSim.jar -t -s $(PENNSIM_SCRIPT)
 
 # make BOOT.BIN image for programming FPGA from an SD card
-boot: pathcheck output/$(BITSTREAM_FILENAME) $(SDBOOT_DIR)/zynq_fsbl_0.elf
+boot: vivadoCheck output/$(BITSTREAM_FILENAME) $(SDBOOT_DIR)/zynq_fsbl_0.elf
 	echo "the_ROM_image:{[bootloader]"$(SDBOOT_DIR)/zynq_fsbl_0.elf > $(SDBOOT_BIF)
 	echo output/$(BITSTREAM_FILENAME)"}" >> $(SDBOOT_BIF)
 	bootgen -image $(SDBOOT_BIF) -arch zynq -o output/BOOT.BIN
