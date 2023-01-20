@@ -30,7 +30,7 @@ You can run the tests by `cd`-ing into the `lab1` directory (where this file is)
 and running the command `make test`. When you run the tests on the initial 
 `rca.v` code, lots of tests will fail.
 
-If you get an error about not being able to find the `iverilog` program, you need to [update your PATH variable](https://opensource.com/article/17/6/set-path-linux) to include the path `/home1/c/cis571/tools/bin/`.
+If you get an error about not being able to find the `iverilog` program, you need to run `source  /home1/c/cis5710/tools/cis5710-update-path.sh` (you should be automatically prompted to do so if the scripts can't find `iverilog`).
 
 When a test fails, it tells you that something is wrong,
 but it doesn't explain why. Careful testing of each module can be helpful in
@@ -62,8 +62,6 @@ Some warnings you will encounter in Lab 1 (and beyond):
 As you resolve these warnings, re-run `make check` to see what code analysis finds. Sometimes one bug can mask another!
 
 ## Run synthesis
-
-> Note also that when you first run `make synth` you'll encounter an error that Vivado can't be found, and to run the command `source /home1/c/cis371/software/Vivado/2017.4/settings64.sh` to fix it (yes, the use of the `cis371` course directory is intentional, it's where Vivado is installed). This command sets up your path so that the Vivado tools are accessible. To avoid having to run this command every time you login to biglab, you can add it to your `~/.bash_profile` file and it will automatically get run every time you login.
 
 Now, still from the `lab1` directory, run the command `make synth`. This will launch synthesis, and it will
 take about 2 minutes to complete. If something is really wrong with a design, it
