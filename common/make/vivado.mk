@@ -36,6 +36,9 @@ SDBOOT_BIF=.boot.bif
 
 time=time -f "Vivado took %E m:s and %M KB"
 
+# vivado is upset when LC_ALL isn't defined appropriately
+export LC_ALL = C
+
 # NB: the .set_testcase.v target does create a file .set_testcase.v, but we want it to run every time so we declare it phony
 .PHONY: .set_testcase.v debug program pennsim boot clean extraclean
 
