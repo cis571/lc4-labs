@@ -2,7 +2,7 @@
 `default_nettype none
 
 // set this to 1 to exit after the first failure
-`define EXIT_AFTER_FIRST_ERROR 0
+`define EXIT_AFTER_FIRST_ERROR 1
 
 // change this to adjust how many errors are printed out
 `define MAX_ERRORS_TO_DISPLAY 15
@@ -218,10 +218,33 @@ module test_processor;
                $finish;
             end
             consecutive_stalls = consecutive_stalls + 1;
-        end else begin
+         end else begin
             consecutive_stalls = 0;
-        end
+         end
 
+         if (verify_stall !== 2'b00) begin // in stall cycles, ensure no writes are happening
+            if (verify_regfile_we !== test_regfile_we) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: regfile_we should be %h (but was %h)", 
+                            num_cycles, verify_regfile_we, test_regfile_we);
+               end
+               errors = errors + 1;
+            end
+            if (verify_nzp_we !== test_nzp_we) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: nzp_we should be %h (but was %h)", 
+                            num_cycles, verify_nzp_we, test_nzp_we);
+               end
+               errors = errors + 1;
+            end
+            if (verify_dmem_we !== test_dmem_we) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: dmem_we should be %h (but was %h)", 
+                            num_cycles, verify_dmem_we, test_dmem_we);
+               end
+               errors = errors + 1;
+            end            
+         end
 
          if (verify_stall === 2'b00) begin // if it's a non-stall cycle, verify other test_* signals
 
