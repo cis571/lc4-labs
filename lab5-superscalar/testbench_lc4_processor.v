@@ -273,10 +273,56 @@ module test_processor;
                $finish;
             end
             consecutive_stalls = consecutive_stalls + 1;
-        end else begin
+         end else begin
             consecutive_stalls = 0;
-        end
+         end
 
+         if (verify_stall_A !== 2'b00) begin // in stall cycles, ensure no writes are happening
+            if (verify_regfile_we_A !== test_regfile_we_A) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: regfile_we_A should be %h (but was %h)", 
+                            num_cycles, verify_regfile_we_A, test_regfile_we_A);
+               end
+               errors = errors + 1;
+            end
+            if (verify_nzp_we_A !== test_nzp_we_A) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: nzp_we_A should be %h (but was %h)", 
+                            num_cycles, verify_nzp_we_A, test_nzp_we_A);
+               end
+               errors = errors + 1;
+            end
+            if (verify_dmem_we_A !== test_dmem_we_A) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: dmem_we_A should be %h (but was %h)", 
+                            num_cycles, verify_dmem_we_A, test_dmem_we_A);
+               end
+               errors = errors + 1;
+            end            
+         end
+         if (verify_stall_B !== 2'b00) begin // in stall cycles, ensure no writes are happening
+            if (verify_regfile_we_B !== test_regfile_we_B) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: regfile_we_B should be %h (but was %h)", 
+                            num_cycles, verify_regfile_we_B, test_regfile_we_B);
+               end
+               errors = errors + 1;
+            end
+            if (verify_nzp_we_B !== test_nzp_we_B) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: nzp_we_B should be %h (but was %h)", 
+                            num_cycles, verify_nzp_we_B, test_nzp_we_B);
+               end
+               errors = errors + 1;
+            end
+            if (verify_dmem_we_B !== test_dmem_we_B) begin
+               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+                  $display( "Error at cycle %d: dmem_we_B should be %h (but was %h)", 
+                            num_cycles, verify_dmem_we_B, test_dmem_we_B);
+               end
+               errors = errors + 1;
+            end
+         end
 
          if (verify_stall_A === 2'b00) begin // verify pipe A signals
 
