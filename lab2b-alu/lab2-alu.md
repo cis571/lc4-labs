@@ -41,7 +41,7 @@ The testbench reads a series of instructions, PC, register values, and
 expected results from the input trace, executes them on your ALU,
 compares your result to the expected result, and prints a detailed
 error message if the two differ. The error message prints instructions
-in assembly format for easier cross-referencing with the [LC4 ISA documentation](http://cis.upenn.edu/~cis371/current/lc4.html).
+in assembly format for easier cross-referencing with the [LC4 ISA documentation](https://www.cis.upenn.edu/~cis5710/current/lc4.html).
 
 ## ZedBoard demo
 
