@@ -175,7 +175,7 @@ module test_processor;
             $display("Cycle number: %d", num_cycles);
          end
 
-         if (verify_stall == 2'b0) begin
+         if (verify_stall == 2'b00) begin
             insns = insns + 1; 
          end
             
@@ -222,29 +222,31 @@ module test_processor;
             consecutive_stalls = 0;
          end
 
-         if (verify_stall !== 2'b00) begin // in stall cycles, ensure no writes are happening
-            if (verify_regfile_we !== test_regfile_we) begin
-               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
-                  $display( "Error at cycle %d: regfile_we should be %h (but was %h)", 
-                            num_cycles, verify_regfile_we, test_regfile_we);
-               end
-               errors = errors + 1;
-            end
-            if (verify_nzp_we !== test_nzp_we) begin
-               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
-                  $display( "Error at cycle %d: nzp_we should be %h (but was %h)", 
-                            num_cycles, verify_nzp_we, test_nzp_we);
-               end
-               errors = errors + 1;
-            end
-            if (verify_dmem_we !== test_dmem_we) begin
-               if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
-                  $display( "Error at cycle %d: dmem_we should be %h (but was %h)", 
-                            num_cycles, verify_dmem_we, test_dmem_we);
-               end
-               errors = errors + 1;
-            end            
-         end
+         // in stall cycles, ensure no writes are happening
+         // NB: not ready yet, sometimes in the reference trace write-enables are set during stall cycles...
+         // if (verify_stall !== 2'b00) begin 
+         //    if (verify_regfile_we !== test_regfile_we) begin
+         //       if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+         //          $display( "Error at cycle %d: regfile_we should be %h (but was %h)", 
+         //                    num_cycles, verify_regfile_we, test_regfile_we);
+         //       end
+         //       errors = errors + 1;
+         //    end
+         //    if (verify_nzp_we !== test_nzp_we) begin
+         //       if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+         //          $display( "Error at cycle %d: nzp_we should be %h (but was %h)", 
+         //                    num_cycles, verify_nzp_we, test_nzp_we);
+         //       end
+         //       errors = errors + 1;
+         //    end
+         //    if (verify_dmem_we !== test_dmem_we) begin
+         //       if (errors <= `MAX_ERRORS_TO_DISPLAY) begin 
+         //          $display( "Error at cycle %d: dmem_we should be %h (but was %h)", 
+         //                    num_cycles, verify_dmem_we, test_dmem_we);
+         //       end
+         //       errors = errors + 1;
+         //    end            
+         // end
 
          if (verify_stall === 2'b00) begin // if it's a non-stall cycle, verify other test_* signals
 
