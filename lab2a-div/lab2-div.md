@@ -1,6 +1,6 @@
 In this lab, you'll create a key component of the processor: the ALU
 for the [LC4
-ISA](http://cis.upenn.edu/~cis371/current/lc4.html).
+ISA](https://www.cis.upenn.edu/~cis5710/current/lc4.html).
 
 LC4 contains the `DIV` (divide) and `MOD` (modulo) instructions. To
 complete the ALU that you will use in your single-cycle processor, the

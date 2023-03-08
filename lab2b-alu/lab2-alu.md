@@ -16,7 +16,7 @@ written back to the register file.
 + **Do not use Verilog's `+` `-` `/` `%` operators.** You can however use Verilog's `*` for your `MUL` implementation, and the various shift `<<` `>>` `>>>` and comparison operators `==` `!==` `<` `<=` `>` `>=`
 + Memory operations (LDR, STR): output the generated effective memory address.
 + Comparison instructions (CMP, CMPU, CMPI, CMPIU): Output zero (`0000 0000 0000 0000`), one (`0000 0000 0000 0001`), or negative one (`1111 1111 1111 1111`), depending on the result of the comparison. This will be used later to set the NZP bits.
-+ Branch instructions (BR, JMP, JMPR, JSR, JSRR, RTI, TRAP), the PC of the next instruction *if the branch were to be taken*. The ALU should not decide whether or not the branch actually will be taken, that will be done elsewhere in the datapath.
++ Branch instructions (BR, JMP, JMPR, JSR, JSRR, RTI, TRAP): Output the PC of the next instruction *if the branch were to be taken*. The ALU should not decide whether or not the branch actually will be taken, that will be done elsewhere in the datapath.
 + No-op (NOP) should be treated as if it is a `BR` instruction. When you implement your full datapath, a NOP will be treated as a non-taken `BR`.
 + For `HICONST`, `r1data` holds the `rs` value.
 + All other operations: output zero (`0000 0000 0000 0000`).
@@ -41,7 +41,7 @@ The testbench reads a series of instructions, PC, register values, and
 expected results from the input trace, executes them on your ALU,
 compares your result to the expected result, and prints a detailed
 error message if the two differ. The error message prints instructions
-in assembly format for easier cross-referencing with the [LC4 ISA documentation](http://cis.upenn.edu/~cis371/current/lc4.html).
+in assembly format for easier cross-referencing with the [LC4 ISA documentation](https://www.cis.upenn.edu/~cis5710/current/lc4.html).
 
 ## ZedBoard demo
 
