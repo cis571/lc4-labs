@@ -2,7 +2,7 @@
 `default_nettype none
 
 // set this to 1 to exit after the first failure
-`define EXIT_AFTER_FIRST_ERROR 1
+`define EXIT_AFTER_FIRST_ERROR 0
 
 // change this to adjust how many errors are printed out
 `define MAX_ERRORS_TO_DISPLAY 15
